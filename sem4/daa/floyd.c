@@ -1,4 +1,4 @@
-// warshall
+//floyd
 
 #include <stdio.h>
 int main()
@@ -22,9 +22,9 @@ int main()
         {
             for(k=0; k<n; k++)
             {
-                if(a[j][i]==1 && a[i][k]==1)
+                if(a[j][i]+a[i][k]<a[j][k])
                 {
-                    a[j][k] = 1;
+                    a[j][k] = a[j][i]+a[i][k];
                 }
             }
         }
