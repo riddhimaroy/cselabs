@@ -19,6 +19,24 @@ void dfs(int v, int n)
     pop[po++] = v;
 }
 
+int g[5][5], vis[5], push[5], pop[5], pi=0, po=0;
+
+void dfs(int v, int n)
+{
+    vis[v] = 1;
+    push[pi++] = v;
+    
+    for(int i=0; i<n; i++)
+    {
+        if(g[v][i] == 1 && vis[i]==0)
+        {
+            dfs(i, n);
+        }
+    }
+
+    pop[po++] = v;
+}
+
 int main()
 {
     int v, e, n1, n2;

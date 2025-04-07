@@ -1,13 +1,25 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 typedef struct Node
 {
     int key;
-    struct Node* right;
-    struct Node* left;
+    struct Node* right, left;
     int height;
-}Node;
+} Node;
+
+int max(int a, int b)
+{
+    if(a>b)
+        return a;
+    return b;
+}
+
+int upheight(Node* root)
+{
+    if(root==NULL)
+        return 0;
+    return 1 + max(height(root->left), height(root->right));
+}
 
 Node* ll(Node* y)
 {
@@ -17,8 +29,8 @@ Node* ll(Node* y)
     x->left = y;
     y->right = T2;
 
-    y->height = 1 + (height(y->left) > height(y->right) ? height(y->left) : height(y->right));
-    x->height = 1 + (height(x->left) > height(x->right) ? height(x->left) : height(x->right));
+    x->height=upheight(x);
+    y->height=upheight(y);
 
     return x;
 }
@@ -31,50 +43,75 @@ Node* rr(Node* y)
     x->right = y;
     y->left = T2;
 
-    y->height = 1 + (height(y->left) > height(y->right) ? height(y->left) : height(y->right));
-    x->height = 1 + (height(x->left) > height(x->right) ? height(x->left) : height(x->right));
+    x->height=upheight(x);
+    y->height=upheight(y);
 
     return x;
 }
 
-Node* pred (Node* root, int key)
+int balance(Node* root)
 {
-    Node* y = NULL;
-
-    while(root)
-    {
-        if(key > root->key)
-        {
-            y = root;
-            root = root->right;
-        }
-        else
-            root = root->left;
-    }
-
-    return y;
+    return upheight(root->left)-upheight(root->right);
 }
 
-Node* succ(Node* root, int key)
+Node* insert(Node* root, int key)
 {
-    Node* y = NULL;
+    Node* curr = root;
+    Node* parent = NULL;
+    Node* x = NULL;
+    x->key = key;
+    x->left = x->right = NULL;
+    x->height = 1;
 
-    while(root)
+    while(curr)
     {
-        if(root->key > key)
+        if(key>curr->key)
         {
-            y = root;
-            root = root->left;
+            curr = curr->right;
         }
-
         else
         {
-            root = root->right;
+            curr = curr->left;
         }
+        parent = curr;
     }
 
-    return y;
-}
+    if(key> parent->key)
+    {
+        parent->right = x;
+    }
+    else
+    {
+        parent->left = x;
+    }
 
-int main()
-{}
+    x->height=upheight(x);
+
+    while(parent!=NULL)
+    {
+        parent->height = upheight(parent);
+
+        int bal = balance(parent);
+
+        if(bal>1 && parent->left<key)
+            parent = rr(parent);
+        else if(bal>1 && parent->left>key)
+        {
+            parent->left = ll(parent->left);
+            parent = rr(parent);
+        }
+        else if(bal<-1 && parent->right>key)
+        {
+            parent = ll(parent);
+        }
+        else if (bal<-1 && parent->right<key)
+        {
+            parent->right = rr(parent->right);
+            parent = ll(parent);
+        }
+
+        parent = parent->left ? parent->left : parent->right;
+    }
+
+    return root;
+}

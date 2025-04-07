@@ -1,4 +1,4 @@
-#include <stdio.h>
+ #include <stdio.h>
 #define M 100
 
 int g[M][M], vis[M], queue[M], front = 0, rear = 0;
