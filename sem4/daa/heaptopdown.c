@@ -20,13 +20,13 @@ int main()
 
     while(i>0)
     {
-        if(arr[i]>arr[(int)((i+0.5)/2)])
+        if(arr[i]>arr[(i-1)/2])
         {
             x = arr[i];
-            arr[i] = arr[(int)((i+0.5)/2)];
-            arr[(int)((i+0.5)/2)]=x;
+            arr[i] = arr[(i-1)/2];
+            arr[(i-1)/2]=x;
 
-            i = (int)((i+0.5)/2);
+            i = (i-1)/2;
         }
 
         else
