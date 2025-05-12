@@ -7,7 +7,7 @@ __Vectors
 	DCD Reset_Handler ; reset vector
 	ALIGN
 	AREA mycode, CODE, READONLY
-	ENTRY
+	ENTRY 
 	EXPORT Reset_Handler
 Reset_Handler
 	LDR R0, =SRC
@@ -39,3 +39,22 @@ SRC DCD 5
 	AREA mydata, DATA, READWRITE
 DST DCD 0
 	END
+
+
+	ldr r0, [src]
+	mov r3, 1
+	bl factorialstr
+
+fact 	cmp r1, #0
+		beq BASE
+
+		push{r1, lr}
+		subs r1, r1, #1
+		bl fact
+		pop{r1}
+
+		mul r3, r3, r1
+		bx lr
+
+BASE	mov r3, #1
+		bx
